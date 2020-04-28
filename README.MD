@@ -125,3 +125,41 @@
         path('', include('tasks.urls')), 
     ]
     ~~~
+3) After launching virtual environment and relaunching the server, the browser will show the simple default view
+<img src = "Simple_Default_View.png"/>
+
+### Define template
+1) Create folders `templates/tasks` within the `tasks` app
+2) Create the file `list.html` inside `templates/tasks`
+3) Add the following to `list.html`
+    ~~~ html
+    <h3> Todos </h3>
+    ~~~
+4) Modify the `tasks/views.py` file to return the template file `list.html`
+- replace `return HttpResponse("Test Index view works")` with
+`~~~ py
+# Create your views here.
+def index(request):
+    return render(request, 'tasks/list.html')
+5) Refreshing the browser should display the template
+<img src = "Simple_Todos_View.png"/>
+
+### Setup Database
+1) Create the following model inside `tasks/models`
+    ~~~ py
+    class Task(models.Model):
+        title = models.CharField(max_length = 200)
+        complete = models.BooleanField(default=False)
+        created = models.DateTimeField(auto_now_add=True)
+
+        def __str__(self):
+            return self.title 
+    ~~~
+2) Create tables for migration
+- Quit server
+- In terminal, run `python manage.py makemigrations`
+3) Migrate the database
+- In terminal, run `python manage.py migrate`
+4) Register the database in `admin.py`
+5) Launch the admin panel to verify `Tasks` table created
+<img src = "Task_AdminPanel.png"/>
