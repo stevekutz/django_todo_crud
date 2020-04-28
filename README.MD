@@ -43,9 +43,20 @@
     - the `tasks` folder will show up inside the `todo` folder
     ~~~ bash
     python manage.py startapp
-    ~~~  
-    - the `app` called `tasks` will have the directory structure
-
+    ~~~   
+    - the directory of tasks will look like:
+    ~~~ text
+    tasks/
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        __init__.py
+    models.py
+    tests.py
+    urls.py
+    views.py
+    ~~~
 9) Add `tasks` to the `INSTALED_APPS` within `todo/settings.py`
     ~~~ py
     ...
@@ -63,18 +74,54 @@
     ...
     ~~~
 
-### Setup URL routing
+### Setup a Simple Default View
 1) Inside `tasks/views.py` import `HttpResponse`
-- `from django.http import HttpResponse`
-- create default view
+    ~~~ py
+    from django shortcuts import render
+    from django.http import HttpResponse
+    ~~~
+2) Create a simple default view
     ~~~ py
     # Create your views here.
     def index(request):
         return HttpResponse("Test Index view")
     ~~~
-2) Create a `urls.py` file inside the `tasks` folder
-- import path at top of `urls.py`
+### Create a `URLconf` (e.g. URL configuration) inside of the tasks `app`
+- this will map the view to a URL
+1) Create a `urls.py` file inside the `tasks` folder
+2) Import path at top of `urls.py`
     ~~~ py
     from django.urls import path
     ~~~
-- add a URL pattern
+3) Add a URL pattern
+- `path` receives a `route` and a `view`
+    - `route` is a string that receives a `URL pattern`
+    - IF a route is found, the `view` function is called
+    - the `views.py` module contains the `index` function
+    ~~~ py
+    from django.urls import path
+    from . import views
+
+    # define paths
+    urlpatterns = [
+        path ('', views.index) 
+    ] 
+    ~~~
+###  Update the root `URLconf` for the todo `project`
+1) Add the import `django.urls.include` to `/todo/todo/urls.py`
+- It originally looks like `from django.urls import path`
+~~~ py
+    from django.urls import path, include
+~~~
+2) Append `path('', include('tasks.urls')),` to the `urlpatterns` list
+- the imported function `include` will allow other `URLconfs` to be referenced   
+- `/todo/todo/urls.py` should now look like  
+    ~~~ py
+    from django.contrib import admin
+    from django.urls import path, include # added include 7:47
+
+    urlpatterns = [
+        path('admin/', admin.site.urls),
+        path('', include('tasks.urls')), 
+    ]
+    ~~~
