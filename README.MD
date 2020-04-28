@@ -40,10 +40,12 @@
     - login into to admin panel with superuser credentials
     - once verified, quit server
 8) Create a new `app` called `tasks`
-    - the `tasks` folder will show up inside `todo`
+    - the `tasks` folder will show up inside the `todo` folder
     ~~~ bash
     python manage.py startapp
-    ~~~   
+    ~~~  
+    - the `app` called `tasks` will have the directory structure
+
 9) Add `tasks` to the `INSTALED_APPS` within `todo/settings.py`
     ~~~ py
     ...
