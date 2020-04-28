@@ -1,21 +1,28 @@
 ### Django Todo CRUD 
 
 #### Project Setup
-1) Start virtual environment 
+1) Start virtual environment using `pipenv`
+    - another way to set up a virtual environment is with Python's `venv` <a href = "https://docs.python.org/3/tutorial/venv.html" > Python Virtual Environment documentation </a>
+    - 
     ~~~ bash 
     pipenv shell
     ~~~
+    - NOTES 
+        - to exit the pip virtual environment, type `exit` in the terminal window where it was launch
+        - `pip list` will show installed packages
+        - `pipenv graph` will show a dependency graph showing sub-dependencies for installed packages
 2) Install Django  
     ~~~ bash
     pipenv install django
     ~~~    
-3) Create new project called `todo`
+3) Create new `project` called `todo`
     ~~~ bash
     django-admin startproject todo
     ~~~    
 4) Change directory into `todo` and launch server
     - default rocket ship start page should be displayed
     ~~~ bash
+    cd todo
     python manage.py runserver
     ~~~    
 5) Close server and run first migration
@@ -32,7 +39,7 @@
     - Start server `python manage.py runserver`  
     - login into to admin panel with superuser credentials
     - once verified, quit server
-8) Create a new app called `tasks`
+8) Create a new `app` called `tasks`
     - the `tasks` folder will show up inside `todo`
     ~~~ bash
     python manage.py startapp
