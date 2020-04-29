@@ -191,3 +191,65 @@ current one.
         </div>
     {% endfor %}
     ~~~
+### Create form, update view & template
+- Use `ModelForms` helper class  
+- <a href = "https://docs.djangoproject.com/en/3.0/topics/forms/modelforms/"> see ModelForm documentation for more info</a> 
+1) Create `forms.py` within `tasks` app
+2) Import `forms`, `ModelForm`, & all models
+    ~~~ py
+    from django import forms
+    from django.forms import ModelForm
+
+    from .models import *
+    ~~~
+3) Create `Taskform` inherited from `ModelForm`
+- define `Meta` class within
+    ~~~ py
+    ...
+    class TaskForm(forms.ModelForm):
+        class Meta:
+            model = Task
+            fields = '__all__'
+    ~~~
+4) Modify `views.py`
+- add the `redirect` import to return a GET request to show updated form
+- the `redirect` function returns a `HttpResponseRedirect` to the specified URL 
+    ~~~ py
+    from django.shortcuts import render
+    from django.http import HttpResponse
+
+    from .models import *
+    from .forms import *
+
+    # Create your views here.
+    def index(request):
+        tasks = Task.objects.all()  # returns everything, e.g.  returns a new QuerySet that is a copy of the current one
+
+        if request.method == 'POST':
+            form = TaskForm(request.POST)
+
+            if form.is_valid:
+                form.save()
+            return  redirect('/')
+        
+        context = {'tasks': tasks, 'form': form}  # create a context dictionary
+        return render(request, 'tasks/list.html', context)
+    ~~~
+5)  Update template
+- we specify `form.title` to only show `task` and not all the fields 
+- we must add `csrf_token`  
+    ~~~ html
+    <h3> Todos </h3>
+
+    <form method = "POST" action = "/"> 
+        {% csrf_token %}
+        {{form.title}}
+        <input type="submit" name = "Create Task">
+    </form>
+
+    {% for task in tasks %}
+        <div>
+            <p>{{task}}</p>
+        </div>
+    {% endfor %}
+    ~~~
