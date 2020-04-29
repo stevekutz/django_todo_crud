@@ -163,3 +163,31 @@ def index(request):
 4) Register the database in `admin.py`
 5) Launch the admin panel to verify `Tasks` table created
 <img src = "Task_AdminPanel.png"/>
+
+### Update View & Template
+- the Django shortcut function `render()` takes two arguments:
+    - the `request` object
+    - a template name OR sequence of template names
+- optional arguments:
+    - context: a dictionary of values
+- `Task.objects.all()` returns a new QuerySet that is a copy of the 
+current one. 
+- the `context` dictionary of `tasks` is passed as the 3rd argument
+    ~~~ py
+    from models import *
+    # Create your views here.
+    def index(request):
+        tasks = Task.objects.all()  # returns everything
+        context = {'tasks': tasks}
+        return render(request, 'tasks/list.html', context)
+    ~~~
+    - Using `template tags`, use a for loop to render tasks
+    ~~~ html
+    <h3> Todos </h3>
+
+    {% for task in tasks %}
+        <div>
+            <p>{{tasks}}</p>
+        </div>
+    {% endfor %}
+    ~~~
