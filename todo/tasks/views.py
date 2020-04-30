@@ -34,3 +34,14 @@ def updateTask(request, prim_key):
     context = {'form': form}   
 
     return render(request, "tasks/update_task.html", context)
+
+def deleteTask(request, prim_key):
+    item = Task.objects.get(id=prim_key)
+
+    if request.method == 'POST':
+        item.delete()
+        return redirect('/')
+
+    context = {'item': item}
+
+    return render(request, 'tasks/delete.html', context)

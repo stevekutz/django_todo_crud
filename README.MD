@@ -128,7 +128,7 @@
 3) After launching virtual environment and relaunching the server, the browser will show the simple default view
 <img src = "Simple_Default_View.png"/>
 
-#### Define template
+#### Define `list` template that shows list of todos
 1) Create folders `templates/tasks` within the `tasks` app
 2) Create the file `list.html` inside `templates/tasks`
 3) Add the following to `list.html`
@@ -194,7 +194,7 @@ current one.
     ~~~
 2) Use the `Admin Panel` to add a few tasks
 3) Refreshing the browser shouls now display the tasks    
-### Create form, update view & template
+### Add functionality 
 - Use `ModelForms` helper class  
 - <a href = "https://docs.djangoproject.com/en/3.0/topics/forms/modelforms/"> ModelForm Django documentation</a> 
 1) Create `forms.py` within `tasks` app
@@ -238,7 +238,7 @@ current one.
         context = {'tasks': tasks, 'form': form}  # create a context dictionary
         return render(request, 'tasks/list.html', context)
     ~~~
-5) Update template
+5) Update the 'list' template
 - we specify `form.title` to only show `task` and not all the fields 
 - we must add `csrf_token` that is enabled by default in the list of the `MIDDLE_WARE` section in `settings.py` to prevent Cross Site Request Forgeries
 - <a href = "https://docs.djangoproject.com/en/3.0/ref/csrf/"> CRSF Django documentation</a>
@@ -259,7 +259,6 @@ current one.
     {% endfor %}
     ~~~
 ### Update functionality  
-#### Create a template for updating a task
 1) Create a new template called `update_task.html` for updating a task
 2) Add the following to the template
 - `instance` is assigned `task` so that the form is prefilled with the instance of the object received by the specific `id`
@@ -319,4 +318,39 @@ current one.
         </div>
     {% endfor %}
     ~~~
-    
+### Delete functionality
+1) Create new template called `delete.html`
+- the specified item to be deleted is included in the confirmation prompt
+- if user choses to cancel, they are redirected to the home page
+    ~~~ html
+    <p> Are you sure you want to delete "{{item}}" ? </p>
+
+    <a href = "{% url 'list' %}"> Cancel </a>
+
+    <form method = "POST" action = "">
+        {% csrf_token %}
+
+        <button type = "submit"> Delete </button>
+    </form>
+    ~~~
+2) Update `urls.py`
+    ~~~ py
+    urlpatterns = [
+        path ('', views.index, name = "list"), 
+        path('update_task/<str:prim_key>/', views.updateTask, name = "update_task"),
+        path('delete/<str:prim_key>/', views.deleteTask, name = "delete"),
+    ]  
+    ~~~
+3) Add the `deleteTask` to `views.py`
+    ~~~ py
+    def deleteTask(request, prim_key):
+        item = Task.objects.get(id=prim_key)
+
+        if request.method == 'POST':
+            item.delete()
+            return redirect('/')
+
+        context = {'item': item}
+
+        return render(request, 'tasks/delete.html', context)
+    ~~~
