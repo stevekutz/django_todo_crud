@@ -371,12 +371,13 @@ current one.
         </div>
     {% endfor %}
  ~~~
- ### Styling 
- 1) Add `BootstrapCDN` to `list.html`
+ ### Styling
+ #### The Todo list container 
+ 1) Add `BootstrapCDN` to the top of `list.html`
  ~~~ html
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
  ~~~
- 2) Add `Internal CSS` to `list.html`
+ 2) Next, add `Internal CSS` to `list.html`
  ~~~ html
  <style>
 
@@ -424,5 +425,14 @@ current one.
 	}
 
 </style>
-
  ~~~
+3) Surround the original code beneath the <style> tags within a <div> tag and add the class attribute `center-column`
+    ~~~ html
+    <div class = "center-column">
+    ~~~
+4) Add the class attributes to the Update and Delete <a> tags 
+- `btn` stands for button
+- `btn-sm` stand for small button
+- `btn-info` provides a teal color
+- the background-color and border-color are overridden within the  `Internal CSS` declarations for `btn-danger`   
+#### Todo items
