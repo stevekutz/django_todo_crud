@@ -354,3 +354,21 @@ current one.
 
         return render(request, 'tasks/delete.html', context)
     ~~~
+ ### Add Strike through for completed items   
+ - update `list` template to test if completed is True
+ ~~~ html
+    {% for task in tasks %}
+        <div>
+            <a href = "{% url 'update_task' task.id %}"> Update </a>
+            <a href = "{% url 'delete' task.id %}"> Delete </a>
+            
+            {% if task.complete == True %}
+            <strike>{{task}}</strike>
+            {% else %}
+            <span> {{task}} </span>
+            {% endif %}
+
+        </div>
+    {% endfor %}
+
+ ~~~
