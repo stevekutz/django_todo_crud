@@ -19,3 +19,18 @@ def index(request):
     
     context = {'tasks': tasks, 'form': form}  # create a context dictionary
     return render(request, 'tasks/list.html', context)
+
+def updateTask(request, prim_key):
+    task = Task.objects.get(id = prim_key) # id comes from primary key
+
+    form =  TaskForm(instance = task)
+
+    if request.method == 'POST':
+        form =  TaskForm(request.POST, instance = task)
+        if form.is_valid():
+            form.save()
+            return redirect('/') # send back to home page
+
+    context = {'form': form}   
+
+    return render(request, "tasks/update_task.html", context)

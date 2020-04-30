@@ -1,5 +1,5 @@
-### Django Todo CRUD 
-
+# Django Todo CRUD 
+### Based upon the `Dennis Ivy` <a href = "https://www.youtube.com/watch?v=4RWFvXDUmjo" >tutorial</a> 
 #### Project Setup
 1) Start virtual environment using `pipenv`
     - another way to set up a virtual environment is with Python's `venv` <a href = "https://docs.python.org/3/tutorial/venv.html" > Python Virtual Environment documentation </a>
@@ -86,7 +86,7 @@
     def index(request):
         return HttpResponse("Test Index view")
     ~~~
-### Create a `URLconf` (e.g. URL configuration) inside of the tasks `app`
+#### Create a `URLconf` (e.g. URL configuration) inside of the tasks `app`
 - this will map the view to a URL
 1) Create a `urls.py` file inside the `tasks` folder
 2) Import path at top of `urls.py`
@@ -107,7 +107,7 @@
         path ('', views.index) 
     ] 
     ~~~
-###  Update the root `URLconf` for the todo `project`
+####  Update the root `URLconf` for the todo `project`
 1) Add the import `django.urls.include` to `/todo/todo/urls.py`
 - It originally looks like `from django.urls import path`
 ~~~ py
@@ -128,7 +128,7 @@
 3) After launching virtual environment and relaunching the server, the browser will show the simple default view
 <img src = "Simple_Default_View.png"/>
 
-### Define template
+#### Define template
 1) Create folders `templates/tasks` within the `tasks` app
 2) Create the file `list.html` inside `templates/tasks`
 3) Add the following to `list.html`
@@ -138,13 +138,13 @@
 4) Modify the `tasks/views.py` file to return the template file `list.html`
 - replace `return HttpResponse("Test Index view works")` with
 `~~~ py
-# Create your views here.
+#### Create view to show list of tasks template
 def index(request):
     return render(request, 'tasks/list.html')
 5) Refreshing the browser should display the template
 <img src = "Simple_Todos_View.png"/>
 
-### Setup Database
+#### Setup Database
 1) Create the following model inside `tasks/models`
     ~~~ py
     class Task(models.Model):
@@ -164,7 +164,7 @@ def index(request):
 5) Launch the admin panel to verify `Tasks` table created
 <img src = "Task_AdminPanel.png"/>
 
-### Update View & Template
+#### Update View & Template
 - the Django shortcut function `render()` takes two arguments:
     - the `request` object
     - a template name OR sequence of template names
@@ -173,6 +173,7 @@ def index(request):
 - `Task.objects.all()` returns a new QuerySet that is a copy of the 
 current one. 
 - the `context` dictionary of `tasks` is passed as the 3rd argument
+1) Update `views.py`
     ~~~ py
     from models import *
     # Create your views here.
@@ -191,9 +192,11 @@ current one.
         </div>
     {% endfor %}
     ~~~
+2) Use the `Admin Panel` to add a few tasks
+3) Refreshing the browser shouls now display the tasks    
 ### Create form, update view & template
 - Use `ModelForms` helper class  
-- <a href = "https://docs.djangoproject.com/en/3.0/topics/forms/modelforms/"> see ModelForm documentation for more info</a> 
+- <a href = "https://docs.djangoproject.com/en/3.0/topics/forms/modelforms/"> ModelForm Django documentation</a> 
 1) Create `forms.py` within `tasks` app
 2) Import `forms`, `ModelForm`, & all models
     ~~~ py
@@ -212,7 +215,7 @@ current one.
             fields = '__all__'
     ~~~
 4) Modify `views.py`
-- add the `redirect` import to return a GET request to show updated form
+- add the `redirect` import to return a GET request to show updated tasks
 - the `redirect` function returns a `HttpResponseRedirect` to the specified URL 
     ~~~ py
     from django.shortcuts import render
@@ -235,9 +238,11 @@ current one.
         context = {'tasks': tasks, 'form': form}  # create a context dictionary
         return render(request, 'tasks/list.html', context)
     ~~~
-5)  Update template
+5) Update template
 - we specify `form.title` to only show `task` and not all the fields 
-- we must add `csrf_token`  
+- we must add `csrf_token` that is enabled by default in the list of the `MIDDLE_WARE` section in `settings.py` to prevent Cross Site Request Forgeries
+- <a href = "https://docs.djangoproject.com/en/3.0/ref/csrf/"> CRSF Django documentation</a>
+
     ~~~ html
     <h3> Todos </h3>
 
@@ -253,3 +258,65 @@ current one.
         </div>
     {% endfor %}
     ~~~
+### Update functionality  
+#### Create a template for updating a task
+1) Create a new template called `update_task.html` for updating a task
+2) Add the following to the template
+- `instance` is assigned `task` so that the form is prefilled with the instance of the object received by the specific `id`
+- the instance will have the same model and will know how to prefill the form
+- the `action` is left blank we want to URL to be same page
+    ~~~ py
+    <h3> Update Task </h3>
+
+    <form method = "POST" action = "">
+        {% csrf_token %}
+
+        {{form}}
+        <input type = "submit" name = "Update Task"/>
+    </form>
+    ~~~
+3) Build the view for `updateTask`
+- `form =  TaskForm(request.POST, instance = task)` takes the updated POST data and puts it into the current `instance` 
+    ~~~ py
+    def updateTask(request, prim_key):
+        task = Task.objects.get(id = prim_key) # id comes from primary key
+
+        form =  TaskForm(instance = task)
+
+        if request.method == 'POST':
+            form =  TaskForm(request.POST, instance = task)
+            if form.is_valid():
+                form.save()
+                return redirect('/') # send back to home page
+
+        context = {'form': form}   
+
+        return render(request, "tasks/update_task.html", context)
+    ~~~
+4) Update URL mapping in `url.py`
+- use the named URL pattern `update_task`
+- also add in the named URL pattern `list`
+- using named URL patterns allows URL reversing
+<a href = "https://docs.djangoproject.com/en/3.0/topics/http/urls/#naming-url-patterns"> URL dispatcher Django documentation</a>
+- the primary key is passed as a string although using as integer would also work e.g. `<int:prim_key>/`
+- we also add names to both URL patterns
+    ~~~ py
+    # define paths list
+    urlpatterns = [
+        path ('', views.index, name = "list"), 
+        path('update_task/<str:prim_key/', views.updateTask, name = "update_task"),
+        
+    ]  
+    ~~~
+5) Add a link to the update template inside the list template
+- template tags are used
+- `task.id` is used to create a link to the task
+    ~~~ html
+    {% for task in tasks %}
+        <div>
+            <a href = "{% url 'update_task' task.id %}"> Update </a>
+            <p>{{task}}</p>
+        </div>
+    {% endfor %}
+    ~~~
+    
