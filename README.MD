@@ -354,7 +354,9 @@ current one.
 
         return render(request, 'tasks/delete.html', context)
     ~~~
- ### Add Strike through for completed items   
+ ### Add text decoration to cross out completed items
+ - the `strike` tag is not supported in HTML5 so use the `del` tag instead 
+ - use `Inline CSS` and `text-decoration-color` to cross out completed items
  - update `list` template to test if completed is True
  ~~~ html
     {% for task in tasks %}
@@ -363,7 +365,7 @@ current one.
             <a href = "{% url 'delete' task.id %}"> Delete </a>
             
             {% if task.complete == True %}
-            <strike>{{task}}</strike>
+            <del style = "text-decoration-color: red;">{{task}}</del>
             {% else %}
             <span> {{task}} </span>
             {% endif %}
@@ -435,4 +437,30 @@ current one.
 - `btn-sm` stand for small button
 - `btn-info` provides a teal color
 - the background-color and border-color are overridden within the  `Internal CSS` declarations for `btn-danger`   
-#### Todo items
+5) Add a class attribute for each task item as `item-row`
+    ~~~ html
+    <div class = "item-row">
+        <a class = "btn btn-sm btn-info"  href = "{% url 'update_task' task.id %}"> Update </a>
+        <a class = "btn btn-sm btn-danger"  href = "{% url 'delete' task.id %}"> Delete </a>
+        
+        {% if task.complete == True %}
+        <del style = "text-decoration-color: red;">{{task}}</del>
+        {% else %}
+        <span> {{task}} </span>
+        {% endif %}
+
+    </div>
+    ~~~
+6)Style the `Todos` title with `Inline CSS`
+    ~~~ html
+    <h3 style = "text-align: center; color: #002b80;" > Todos </h3>
+    ~~~
+7) In `forms.py`, a `widget` is used to provide placeholder text inside the input field. This is defined as title in the `Task` model
+    ~~~ py 
+    class TaskForm(forms.ModelForm):
+        title = forms.CharField(widget = forms.TextInput(attrs={'placeholder':'Add new task...'}))
+        
+        class Meta:
+            model = Task
+            fields = '__all__'
+    ~~~
