@@ -382,55 +382,55 @@ current one.
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
  ~~~
  2) Next, add `Internal CSS` to `list.html`
- ~~~ html
- <style>
+    ~~~ html
+    <style>
 
-	body{
-		background-color: #638CB8;
-	}
+        body{
+            background-color: #638CB8;
+        }
 
-	input{
-		width: 100%;
-		padding: 12px 20px;
-		margin: 8px 0;
-		box-sizing: border-box;
-	}
+        input{
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
 
-	input::placeholder {
-	  color: #d3d3d3;
-	}
+        input::placeholder {
+        color: #d3d3d3;
+        }
 
-	.submit{
-		background-color: #6BA3E8;
-	}
+        .submit{
+            background-color: #6BA3E8;
+        }
 
-	.center-column{
-		width:600px;
-		margin: 20px auto;
-		padding:20px;
-		background-color: #fff;
-		border-radius: 3px;
-		box-shadow: 6px 2px 30px 0px rgba(0,0,0,0.75);
-	}
+        .center-column{
+            width:600px;
+            margin: 20px auto;
+            padding:20px;
+            background-color: #fff;
+            border-radius: 3px;
+            box-shadow: 6px 2px 30px 0px rgba(0,0,0,0.75);
+        }
 
-	.item-row{
-		background-color: #906abd;
-		margin: 10px;
-		padding: 20px;
-		border-radius: 3px;
-		color: #fff;
-		font-size: 16px;
-		box-shadow: 0px -1px 10px -4px rgba(0,0,0,0.75);
-	}
+        .item-row{
+            background-color: #906abd;
+            margin: 10px;
+            padding: 20px;
+            border-radius: 3px;
+            color: #fff;
+            font-size: 16px;
+            box-shadow: 0px -1px 10px -4px rgba(0,0,0,0.75);
+        }
 
-	.btn-danger{
-		background-color: #ffae19;
-		border-color: #e59400;
-	}
+        .btn-danger{
+            background-color: #ffae19;
+            border-color: #e59400;
+        }
 
-</style>
- ~~~
-3) Surround the original code beneath the <style> tags within a <div> tag and add the class attribute `center-column`
+    </style>
+    ~~~
+3) Surround the original code beneath the `<style>` tags within a `<div>` tag and add the class attribute `center-column`
     ~~~ html
     <div class = "center-column">
     ~~~
@@ -453,11 +453,14 @@ current one.
 
     </div>
     ~~~
-6)Style the `Todos` title with `Inline CSS`
+6) Style the `Todos` title with `Inline CSS`
+
     ~~~ html
-    <h3 style = "text-align: center; color: #002b80;" > Todos </h3>
+        <h3 style = "text-align: center; color: #002b80;" > Todos </h3>
     ~~~
+
 7) In `forms.py`, a `widget` is used to provide placeholder text inside the input field. This is defined as title in the `Task` model
+
     ~~~ py 
     class TaskForm(forms.ModelForm):
         title = forms.CharField(widget = forms.TextInput(attrs={'placeholder':'Add new task...'}))
