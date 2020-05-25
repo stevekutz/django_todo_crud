@@ -193,7 +193,7 @@ current one.
     {% endfor %}
     ~~~
 2) Use the `Admin Panel` to add a few tasks
-3) Refreshing the browser shouls now display the tasks    
+3) Refreshing the browser should now display the tasks    
 ### Add functionality 
 - Use `ModelForms` helper class  
 - <a href = "https://docs.djangoproject.com/en/3.0/topics/forms/modelforms/"> ModelForm Django documentation</a> 
@@ -207,6 +207,8 @@ current one.
     ~~~
 3) Create `Taskform` inherited from `ModelForm`
 - define `Meta` class within
+
+- the `Meta` class is just a class container with some options (metadata)
     ~~~ py
     ...
     class TaskForm(forms.ModelForm):
@@ -214,7 +216,7 @@ current one.
             model = Task
             fields = '__all__'
     ~~~
-4) Modify `views.py`
+1) Modify `views.py`
 - add the `redirect` import to return a GET request to show updated tasks
 - the `redirect` function returns a `HttpResponseRedirect` to the specified URL 
     ~~~ py
@@ -298,7 +300,7 @@ current one.
 - using named URL patterns allows URL reversing
 <a href = "https://docs.djangoproject.com/en/3.0/topics/http/urls/#naming-url-patterns"> URL dispatcher Django documentation</a>
 - the primary key is passed as a string although using as integer would also work e.g. `<int:prim_key>/`
-- we also add names to both URL patterns
+- we also add names to both URL patterns. The `name` maps to the view
     ~~~ py
     # define paths list
     urlpatterns = [
